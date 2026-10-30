@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f2937" />
+  <!-- The web version, added to the home screen on iPhone/iPad. -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="自動翻譜" />
+  <title>自動翻譜</title>
+  <script type="module" crossorigin src="./assets/index-DeD6kbUU.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-4ImAXjRx.css">
+</head>
+<body>
+  <header class="bar">
+    <button id="libraryBtn" title="樂譜庫">📚 樂譜</button>
+    <select id="instrument" title="樂器">
+      <option value="piano">🎹 鋼琴</option>
+      <option value="guitar">🎸 吉他</option>
+    </select>
+    <button id="listen" class="primary">🎤 聆聽</button>
+    <button id="demo">▶ 示範</button>
+    <button id="restart" title="回到開頭">⏮</button>
+    <button id="reportBtn" title="回報辨識錯的小節" hidden>🚩 回報</button>
+    <button id="sourceBtn" title="看這首原本的譜（原稿）" hidden>📄 原稿</button>
+    <span class="spacer"></span>
+    <button id="updateBtn" class="update" hidden>⬆ 有新版</button>
+    <button id="zoomOut" title="縮小">－</button>
+    <button id="zoomIn" title="放大">＋</button>
+    <button id="settingsBtn" title="設定">⚙</button>
+    <input id="file" type="file" accept=".musicxml,.xml,.mxl,.pdf,.png,.jpg,.jpeg,application/pdf,application/xml,text/xml" hidden />
+  </header>
+  <div class="info">
+    <strong id="title">自動翻譜</strong>
+    <span id="tempo"></span>
+    <span id="heard"></span>
+    <span id="recDot" hidden title="正在錄下這次跟譜">● 錄製中</span>
+    <div class="meter"><div id="meter"></div></div>
+  </div>
+  <nav id="order" title="演奏順序（已展開反覆記號），點一下可跳過去"></nav>
+  <!-- Picking the bars that were recognised wrong (🚩 回報). -->
+  <div id="markBar" hidden>
+    <span>點選辨識錯的小節，可以選好幾個</span>
+    <button id="markCancel">取消</button>
+    <button id="markNext" class="primary" disabled>下一步</button>
+  </div>
+  <div id="stage">
+    <main id="scroller">
+      <div id="scoreWrap">
+        <div id="score"></div>
+        <div id="scan" hidden></div>
+        <div id="jumpTarget" hidden></div>
+        <div id="marks"></div>
+        <div id="highlight" hidden></div>
+        <div id="cursor" hidden></div>
+      </div>
+    </main>
+    <aside id="preview" hidden title="點一下可直接跳過去">
+      <div id="previewLabel"></div>
+      <div id="previewView"><div id="previewScore"></div><div id="previewMark"></div></div>
+    </aside>
+  </div>
+  <footer id="status">準備中…</footer>
+  <!-- What the follower goes by while it listens (⚙ 設定 → 顯示跟譜狀態). -->
+  <div id="followState" hidden></div>
+
+  <dialog id="library" class="sheet">
+    <section id="libList">
+      <header class="sheetHead">
+        <h3>樂譜庫</h3>
+        <button class="close" data-close>✕</button>
+      </header>
+      <div class="sheetActions">
+        <button id="newSong" class="primary">＋ 新增樂曲</button>
+        <button id="open" class="plain">開啟單一檔案（不存到雲端）</button>
+      </div>
+      <div id="account">
+        <span id="accountText"></span>
+        <button id="loginStart" class="plain" hidden>用 Email 登入</button>
+        <button id="loginCancel" class="plain" hidden>取消</button>
+        <form id="loginForm" hidden>
+          <input id="loginEmail" type="email" placeholder="你的 Email" autocomplete="email" required />
+          <button class="primary">寄登入連結</button>
+        </form>
+      </div>
+      <p id="libStatus" class="hint"></p>
+      <ul id="songs"></ul>
+    </section>
+    <section id="libEdit" hidden>
+      <header class="sheetHead">
+        <button id="editBack" class="close">‹ 返回</button>
+        <h3 id="editHeading">新增樂曲</h3>
+      </header>
+      <label>曲名 <input id="songTitle" type="text" placeholder="例如：月光奏鳴曲 第一樂章" /></label>
+      <div class="choice" id="songInstrument">
+        <span>樂器</span>
+        <button type="button" data-value="piano">🎹 鋼琴</button>
+        <button type="button" data-value="guitar">🎸 吉他</button>
+      </div>
+      <div class="sheetActions">
+        <button id="addPhotos">＋ 照片</button>
+        <button id="addFiles">＋ PDF／檔案</button>
+      </div>
+      <p class="hint">照片可以一次勾選好幾張；選 PDF 時，長按第一個檔案就能多選。也可以加 MusicXML。</p>
+      <p class="hint" id="pagesHint">頁面會照下面的順序合成一首，用 ◀ ▶ 調整順序。點縮圖可以放大看。</p>
+      <ol id="pages"></ol>
+      <div class="sheetActions end">
+        <!-- In the bar that stays in view, so saving is seen however long the page list is. -->
+        <p id="editStatus" class="hint"></p>
+        <button id="deleteSong" class="danger" hidden>刪除這首</button>
+        <span class="spacer"></span>
+        <button id="reconvertSong" hidden>重新辨識</button>
+        <button id="saveSong" class="primary">儲存並轉換</button>
+      </div>
+      <input id="pageFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.musicxml,.xml,.mxl,application/pdf,image/*" hidden />
+      <!-- Images only: on Android this opens the photo picker, where several
+           pages are picked with a tap each (MainActivity). -->
+      <input id="photoFiles" type="file" multiple accept="image/*" hidden />
+    </section>
+  </dialog>
+
+  <!-- One page of a song being put together, or of the pages the song on
+       screen was read from (📄 原稿), large enough to read. -->
+  <dialog id="pageView">
+    <header class="sheetHead">
+      <h3 id="pageViewTitle"></h3>
+      <button id="pageZoomOut" title="縮小">－</button>
+      <button id="pageZoomIn" title="放大">＋</button>
+      <button id="pageViewClose" class="close" title="關閉">✕</button>
+    </header>
+    <div id="pageViewBody"><img id="pageViewImg" alt="" /></div>
+    <p class="hint">兩指可以放大縮小，點兩下也可以。</p>
+    <div class="sheetActions">
+      <button id="pagePrev">‹ 上一頁</button>
+      <button id="pageNext">下一頁 ›</button>
+      <span class="spacer"></span>
+      <button id="pageMoveBack">◀ 往前移</button>
+      <button id="pageMoveOn">往後移 ▶</button>
+    </div>
+  </dialog>
+
+  <dialog id="settings">
+    <form method="dialog">
+      <h3>設定</h3>
+      <label>遇到反覆記號時，提早顯示要跳去的地方
+        <select id="lookahead">
+          <option value="0">不要提早顯示</option>
+          <option value="1">最後 1 小節開始時</option>
+          <option value="2">最後 2 小節開始時</option>
+        </select>
+      </label>
+      <p class="hint" id="tuningInfo"></p>
+      <label class="check"><input type="checkbox" id="showFollowState" /> 跟譜時在最下方用紅字顯示跟譜狀態</label>
+      <p class="hint">信心：App 多確定游標的位置。吻合：聽到的音和游標那裡譜上的音有多像。起音：每秒聽到幾個新彈下去的音。停：游標在同一個地方停了幾秒。當成沒彈、當成雜音：最近兩秒的琴聲有多少沒拿來跟譜，因為太小聲，或聽不出是哪些音。也像：App 覺得也可能在哪一小節。打 ✗ 的是不好的地方。</p>
+      <label class="check"><input type="checkbox" id="recordFollowing" /> 錄下跟譜過程，回報跟不好的地方</label>
+      <p class="hint">開著時，每次按「🎤 聆聽」都會錄下琴聲和游標走的位置。停止後錄音會先存在手機上，要傳給 Claude 分析為什麼沒跟好、還是刪掉，由你決定。彈奏中跟丟時，像平常一樣點一下正確的小節，這些地方也會一起記下來。</p>
+      <p id="recSaved" class="hint" hidden>手機上有 <span id="recCount"></span> <button type="button" id="recManage">查看錄音</button></p>
+      <h4>App 版本</h4>
+      <p><span id="versionInfo">—</span> <button id="checkUpdate">檢查更新</button></p>
+      <menu>
+        <button value="cancel">取消</button>
+        <button value="save" class="primary">儲存</button>
+      </menu>
+    </form>
+  </dialog>
+  <dialog id="recSend">
+    <form method="dialog">
+      <h3 id="recHeading"></h3>
+      <p id="recSummary" class="hint"></p>
+      <label>哪裡跟不好？（可不填）
+        <textarea id="recNote" rows="3" placeholder="例如：第 12 小節開始游標一直落後"></textarea>
+      </label>
+      <menu>
+        <button value="delete" class="danger">刪掉</button>
+        <span class="spacer"></span>
+        <button value="keep">先留著</button>
+        <button value="send" class="primary">傳給 Claude</button>
+      </menu>
+    </form>
+  </dialog>
+  <dialog id="reportSend">
+    <form method="dialog">
+      <h3>回報辨識錯誤</h3>
+      <p id="reportSummary" class="hint"></p>
+      <label>哪裡不對？（可不填）
+        <textarea id="reportNote" rows="3" placeholder="例如：左手少了一個音、節奏不對、多了一個休止符"></textarea>
+      </label>
+      <menu>
+        <button value="back">返回</button>
+        <span class="spacer"></span>
+        <button value="send" class="primary">傳給 Claude</button>
+      </menu>
+    </form>
+  </dialog>
+  <!-- Following recordings kept on the phone (⚙ 設定 → 查看錄音). -->
+  <dialog id="recList">
+    <header class="sheetHead">
+      <h3>手機上的錄音</h3>
+      <button id="recListClose" class="close" title="關閉">✕</button>
+    </header>
+    <ul id="recItems"></ul>
+  </dialog>
+</body>
+</html>
