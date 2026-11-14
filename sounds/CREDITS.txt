@@ -1,0 +1,18 @@
+Piano and guitar notes played by 示範播放 (the demo playback)
+==========================================================
+
+The recordings in piano/ and guitar/ come from tonejs-instruments by
+Nicholaus P. Brosowsky (https://github.com/nbrosowsky/tonejs-instruments),
+taken from the npm packages tonejs-instrument-piano-mp3 1.1.2 and
+tonejs-instrument-guitar-acoustic-mp3 1.1.2
+(https://github.com/Makefully-Studios/tonejs-instruments).
+
+They are licensed under Creative Commons Attribution 3.0 Unported (CC BY 3.0):
+https://creativecommons.org/licenses/by/3.0/
+
+Changes made for this app: only some of the notes are kept (the piano's every
+third semitone from C1 to C8, the steel-string guitar's every second one from
+D2 to D5), each is cut to a few seconds with a fade-out, and saved again as
+mono MP3 (64 kbit/s for the piano, 80 kbit/s for the guitar) named by its
+MIDI note number. The app plays the notes in between by playing the nearest
+one a little faster or slower.

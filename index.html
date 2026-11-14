@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f8f4ea" />
+  <!-- The web version, added to the home screen on iPhone/iPad. -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="自動翻譜" />
+  <title>自動翻譜</title>
+  <script type="module" crossorigin src="./assets/index-mpqlMlr6.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BjoFVD1Y.css">
+</head>
+<body>
+  <!-- The app's icons, drawn as one set: <svg class="icon"><use href="#i-…"></svg>. -->
+  <svg style="display: none" aria-hidden="true">
+    <symbol id="i-library" viewBox="0 0 24 24"><path d="M4.5 4v16M9 4v16M13.5 8v12M17 8.4l3.2 11.3" /></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></symbol>
+    <symbol id="i-forward" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" /></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none" /></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.8" /><circle cx="12" cy="12" r="1.8" /><circle cx="19" cy="12" r="1.8" /></g></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" /></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+    <symbol id="i-piano" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M8 5v9M12 5v9M16 5v9" /></symbol>
+    <symbol id="i-guitar" viewBox="0 0 24 24"><circle cx="8.5" cy="15.5" r="5" /><path d="M12.2 11.8L19 5M17.5 3.5l3 3" /></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" /></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M6 5v14M19 5.5v13L9.5 12z" /></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12.5h5M10 16.5h5" /></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 21V4M6 4.5h11l-2.2 4 2.2 4H6" /></symbol>
+    <symbol id="i-rec" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" /></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2" /><circle cx="9" cy="17" r="2" /></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7.5 18.5a4.5 4.5 0 0 1-.6-8.96 6 6 0 0 1 11.6 1.5 3.75 3.75 0 0 1-.5 7.46z" /></symbol>
+    <symbol id="i-update" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14" /></symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="8.5" cy="10" r="1.5" /><path d="M21 15.5l-5-5-8.5 8.5" /></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M9 17.5V5.5l10-2v12" /><circle cx="6.5" cy="17.5" r="2.5" /><circle cx="16.5" cy="15.5" r="2.5" /></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 7V18a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5V9.5A1.5 1.5 0 0 0 19 8h-7.5l-2-2.5H5A1.5 1.5 0 0 0 3.5 7z" /></symbol>
+  </svg>
+
+  <header id="top">
+    <!-- The piece on the stand; tap it for the score library. While the app
+         listens it shows how loud the microphone hears instead. -->
+    <button id="libraryBtn" aria-label="打開樂譜庫">
+      <svg class="icon lib" aria-hidden="true"><use href="#i-library" /></svg>
+      <span id="level" class="level" data-lv="0" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="titleBox">
+        <span class="titleLine">
+          <strong id="title">自動翻譜</strong>
+          <svg class="icon chev" aria-hidden="true"><use href="#i-down" /></svg>
+        </span>
+        <span id="sub">
+          <span id="subText">準備中…</span>
+          <span id="tempo"></span>
+          <span id="heard"></span>
+          <span id="recDot" hidden>錄音中</span>
+        </span>
+      </span>
+    </button>
+    <button id="listen" class="btn primary">
+      <svg class="icon mic" aria-hidden="true"><use href="#i-mic" /></svg>
+      <svg class="icon stop" aria-hidden="true"><use href="#i-stop" /></svg>
+      <span id="listenText">聆聽</span>
+    </button>
+    <button id="moreBtn" class="btn square" aria-label="更多" aria-haspopup="menu">
+      <svg class="icon" aria-hidden="true"><use href="#i-more" /></svg>
+    </button>
+    <!-- "*/*": Android's file picker greys out files whose type it doesn't
+         know, which is what .musicxml, .mxl and .mscz are to many phones. The
+         app tells by the file's name instead. -->
+    <input id="file" type="file" accept=".musicxml,.xml,.mxl,.mscz,.mscx,.pdf,.png,.jpg,.jpeg,application/pdf,application/xml,text/xml,*/*" hidden />
+  </header>
+  <nav id="order" aria-label="演奏順序（已展開反覆記號），點一下可跳過去"></nav>
+  <!-- Picking the bars something is wrong with (更多 → 回報有問題的小節). -->
+  <div id="markBar" hidden>
+    <span>點一下有問題的小節，再點一次取消</span>
+    <button id="markCancel" class="btn">取消</button>
+    <button id="markNext" class="btn primary" disabled>下一步</button>
+  </div>
+  <!-- While the demo plays: how fast (kept for the next time). -->
+  <div id="demoBar" hidden>
+    <span>示範播放的速度</span>
+    <button id="demoSlower" class="btn square" aria-label="慢一點"><svg class="icon" aria-hidden="true"><use href="#i-minus" /></svg></button>
+    <output id="demoTempo"></output>
+    <button id="demoFaster" class="btn square" aria-label="快一點"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg></button>
+  </div>
+  <div id="stage">
+    <main id="scroller">
+      <div id="scoreWrap">
+        <div id="score"></div>
+        <div id="scan" hidden></div>
+        <div id="jumpTarget" hidden></div>
+        <div id="marks"></div>
+        <div id="highlight" hidden></div>
+        <div id="cursor" hidden></div>
+      </div>
+    </main>
+    <aside id="preview" hidden title="點一下可直接跳過去">
+      <div id="previewLabel">
+        <svg class="icon" aria-hidden="true"><use href="#i-next" /></svg>
+        <span id="previewText"></span>
+      </div>
+      <div id="previewView"><div id="previewScore"></div><div id="previewMark"></div></div>
+    </aside>
+  </div>
+  <!-- What the app has to say: there only when there is something, and never
+       over the score. -->
+  <div id="notice" role="status" hidden>
+    <div id="status"></div>
+    <button id="noticeClose" class="btn square plain" aria-label="關閉訊息">
+      <svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>
+    </button>
+  </div>
+  <!-- How sure the follower is of the cursor, as a colour, while it listens
+       (設定 → 用顏色顯示信心). -->
+  <div id="followState" role="img" aria-label="跟譜信心" hidden></div>
+
+  <!-- 更多: everything that isn't needed while playing. -->
+  <dialog id="menu" aria-label="更多">
+    <button id="menuClose" class="btn square dark" aria-label="關閉選單">
+      <svg class="icon" aria-hidden="true"><use href="#i-more" /></svg>
+    </button>
+    <div class="menuBody">
+      <button id="updateBtn" class="menuItem update" hidden>
+        <svg class="icon" aria-hidden="true"><use href="#i-update" /></svg>
+        <span id="updateText">有新版，點這裡更新</span>
+      </button>
+      <div class="menuRow">
+        <span class="grow">譜面大小</span>
+        <button id="zoomOut" class="btn square" aria-label="縮小"><svg class="icon" aria-hidden="true"><use href="#i-minus" /></svg></button>
+        <output id="zoomValue">100%</output>
+        <button id="zoomIn" class="btn square" aria-label="放大"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg></button>
+      </div>
+      <div class="menuRow">
+        <span class="grow">樂器</span>
+        <div class="seg" id="instrument" role="group" aria-label="樂器">
+          <button type="button" data-value="piano"><svg class="icon" aria-hidden="true"><use href="#i-piano" /></svg>鋼琴</button>
+          <button type="button" data-value="guitar"><svg class="icon" aria-hidden="true"><use href="#i-guitar" /></svg>吉他</button>
+        </div>
+      </div>
+      <hr />
+      <button id="demo" class="menuItem">
+        <svg class="icon" aria-hidden="true"><use href="#i-play" /></svg><span class="grow">示範播放</span>
+      </button>
+      <button id="restart" class="menuItem">
+        <svg class="icon" aria-hidden="true"><use href="#i-restart" /></svg><span class="grow">回到開頭</span>
+      </button>
+      <button id="sourceBtn" class="menuItem" hidden>
+        <svg class="icon" aria-hidden="true"><use href="#i-doc" /></svg><span class="grow">看原稿</span>
+      </button>
+      <button id="reportBtn" class="menuItem" hidden>
+        <svg class="icon" aria-hidden="true"><use href="#i-flag" /></svg><span class="grow">回報有問題的小節</span>
+      </button>
+      <button id="recManage" class="menuItem">
+        <svg class="icon" aria-hidden="true"><use href="#i-rec" /></svg><span class="grow">跟譜錄音</span>
+        <span id="recBadge" class="badge" hidden>有新的分析</span>
+      </button>
+      <button id="settingsBtn" class="menuItem">
+        <svg class="icon" aria-hidden="true"><use href="#i-settings" /></svg><span class="grow">設定</span>
+      </button>
+      <hr />
+      <p class="menuFoot" id="versionInfo">—</p>
+    </div>
+  </dialog>
+
+  <dialog id="library" class="page">
+    <section id="libList">
+      <header class="pageHead">
+        <!-- In a folder: back to the library; else back to the score. -->
+        <button id="libBack" class="btn square" aria-label="回到樂譜"><svg class="icon" aria-hidden="true"><use href="#i-back" /></svg></button>
+        <h3 id="libTitle">樂譜庫</h3>
+        <button id="renameFolder" class="btn" hidden>改名</button>
+        <button id="newSong" class="btn primary"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>新增樂曲</button>
+      </header>
+      <div id="account">
+        <svg class="icon" aria-hidden="true"><use href="#i-cloud" /></svg>
+        <span id="accountText"></span>
+        <button id="loginStart" class="link" hidden>用 Email 登入</button>
+        <button id="loginCancel" class="link" hidden>取消</button>
+        <form id="loginForm" hidden>
+          <input id="loginEmail" type="email" placeholder="你的 Email" autocomplete="email" required />
+          <button class="btn primary">寄登入連結</button>
+        </form>
+      </div>
+      <p id="libStatus" class="hint"></p>
+      <ul id="songs"></ul>
+      <div class="pageFoot">
+        <button id="open" class="link">開啟單一檔案（不存到雲端）</button>
+      </div>
+    </section>
+    <section id="libEdit" hidden>
+      <header class="pageHead">
+        <button id="editBack" class="btn square" aria-label="返回"><svg class="icon" aria-hidden="true"><use href="#i-back" /></svg></button>
+        <h3 id="editHeading">新增樂曲</h3>
+      </header>
+      <div class="pageBody">
+        <label class="field"><span class="fieldLabel">曲名</span>
+          <input id="songTitle" type="text" placeholder="例如：月光奏鳴曲 第一樂章" />
+        </label>
+        <div class="field">
+          <label class="fieldLabel" for="songFolder">分類</label>
+          <input id="songFolder" type="text" maxlength="40" placeholder="不分類（放在樂譜庫最上層）" />
+          <!-- The folders there are already, to pick with a tap. -->
+          <div id="folderChips" class="chips"></div>
+        </div>
+        <div class="field inline">
+          <span class="fieldLabel grow">樂器</span>
+          <div class="seg" id="songInstrument" role="group" aria-label="樂器">
+            <button type="button" data-value="piano"><svg class="icon" aria-hidden="true"><use href="#i-piano" /></svg>鋼琴</button>
+            <button type="button" data-value="guitar"><svg class="icon" aria-hidden="true"><use href="#i-guitar" /></svg>吉他</button>
+          </div>
+        </div>
+        <div class="sheetActions">
+          <button id="addPhotos" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-photo" /></svg>加照片</button>
+          <button id="addFiles" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-doc" /></svg>加 PDF／檔案</button>
+        </div>
+        <p class="hint">照片可以一次勾選好幾張；選 PDF 時，長按第一個檔案就能多選。已經有樂譜檔的話更好：MusicXML（.musicxml、.mxl）或 MuseScore（.mscz）可以直接加，一首一個，不用辨識，也不會認錯音。</p>
+        <p class="hint" id="pagesHint">頁面會照下面的順序合成一首，用箭頭調整順序。點縮圖可以放大看。</p>
+        <ol id="pages"></ol>
+      </div>
+      <div class="sheetActions end">
+        <!-- In the bar that stays in view, so saving is seen however long the page list is. -->
+        <p id="editStatus" class="hint"></p>
+        <button id="deleteSong" class="btn danger" hidden>刪除這首</button>
+        <span class="grow"></span>
+        <button id="reconvertSong" class="btn" hidden>重新辨識</button>
+        <button id="saveSong" class="btn primary">儲存並轉換</button>
+      </div>
+      <!-- "*/*" as for the input above: so MusicXML and MuseScore files can be picked. -->
+      <input id="pageFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.musicxml,.xml,.mxl,.mscz,.mscx,application/pdf,image/*,*/*" hidden />
+      <!-- Images only: on Android this opens the photo picker, where several
+           pages are picked with a tap each (MainActivity). -->
+      <input id="photoFiles" type="file" multiple accept="image/*" hidden />
+    </section>
+  </dialog>
+
+  <!-- One page of a song being put together, or of the pages the song on
+       screen was read from (更多 → 看原稿), large enough to read. -->
+  <dialog id="pageView" class="page">
+    <header class="pageHead">
+      <button id="pageViewClose" class="btn square" aria-label="關閉"><svg class="icon" aria-hidden="true"><use href="#i-back" /></svg></button>
+      <h3 id="pageViewTitle"></h3>
+      <button id="pageZoomOut" class="btn square" aria-label="縮小"><svg class="icon" aria-hidden="true"><use href="#i-minus" /></svg></button>
+      <button id="pageZoomIn" class="btn square" aria-label="放大"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg></button>
+    </header>
+    <div id="pageViewBody"><img id="pageViewImg" alt="" /></div>
+    <p class="hint">兩指可以放大縮小，點兩下也可以。</p>
+    <div class="sheetActions">
+      <button id="pagePrev" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-back" /></svg>上一頁</button>
+      <button id="pageNext" class="btn">下一頁<svg class="icon" aria-hidden="true"><use href="#i-forward" /></svg></button>
+      <span class="grow"></span>
+      <button id="pageMoveBack" class="btn">往前移</button>
+      <button id="pageMoveOn" class="btn">往後移</button>
+    </div>
+  </dialog>
+
+  <!-- Every choice here takes effect at once: there is nothing to save. -->
+  <dialog id="settings" class="card">
+    <header class="sheetHead">
+      <h3>設定</h3>
+      <button class="btn square plain" data-close aria-label="關閉"><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg></button>
+    </header>
+    <div class="field">
+      <span class="fieldLabel">快到反覆記號時，提早顯示要跳去的地方</span>
+      <div class="seg wide" id="lookahead" role="group">
+        <button type="button" data-value="0">不顯示</button>
+        <button type="button" data-value="1">提早 1 小節</button>
+        <button type="button" data-value="2">提早 2 小節</button>
+      </div>
+    </div>
+    <div class="field">
+      <span class="fieldLabel">很難認的音（離五線譜很遠、加線三條以上），在旁邊標出</span>
+      <div class="seg wide" id="noteNames" role="group">
+        <button type="button" data-value="off">不標</button>
+        <button type="button" data-value="letters">音名 C D E</button>
+        <button type="button" data-value="solfege">唱名 Do Re Mi</button>
+      </div>
+    </div>
+    <label class="switch">
+      <span class="grow">跟譜時在最下方用顏色顯示信心</span>
+      <input type="checkbox" id="showFollowState" /><i aria-hidden="true"></i>
+    </label>
+    <ul class="legend">
+      <li><i class="sure"></i>綠色：確定游標的位置</li>
+      <li><i class="unsure"></i>黃色：不太確定</li>
+      <li><i class="lost"></i>紅色：可能跟丟了，點一下正確的小節就能拉回來</li>
+      <li><i class="idle"></i>灰色：沒聽到琴聲</li>
+    </ul>
+    <p class="hint" id="tuningInfo"></p>
+    <p class="hint">示範播放的鋼琴和吉他聲音取自 tonejs-instruments（Nicholaus P. Brosowsky），以 CC BY 3.0 授權使用。</p>
+  </dialog>
+
+  <!-- Following recordings: whether to make them, and the ones kept on the
+       phone (更多 → 跟譜錄音). -->
+  <dialog id="recList" class="card">
+    <header class="sheetHead">
+      <h3>跟譜錄音</h3>
+      <button id="recListClose" class="btn square plain" aria-label="關閉"><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg></button>
+    </header>
+    <label class="switch">
+      <span class="grow">錄下跟譜過程，回報跟不好的地方</span>
+      <input type="checkbox" id="recordFollowing" /><i aria-hidden="true"></i>
+    </label>
+    <p class="hint">開著時，每次按「聆聽」都會錄下琴聲和游標走的位置。停止後錄音會先存在手機上，要傳給 Claude 分析為什麼沒跟好、還是刪掉，由你決定。彈奏中跟丟時，像平常一樣點一下正確的小節，這些地方也會一起記下來。</p>
+    <h4 id="recCount"></h4>
+    <ul id="recItems"></ul>
+  </dialog>
+
+  <dialog id="recSend" class="card">
+    <form method="dialog">
+      <h3 id="recHeading"></h3>
+      <p id="recSummary" class="hint"></p>
+      <label class="field"><span class="fieldLabel">哪裡跟不好？（可不填）</span>
+        <textarea id="recNote" rows="3" placeholder="例如：第 12 小節開始游標一直落後"></textarea>
+      </label>
+      <menu>
+        <button value="delete" class="btn danger">刪掉</button>
+        <span class="grow"></span>
+        <button value="keep" class="btn">先留著</button>
+        <button value="send" class="btn primary">傳給 Claude</button>
+      </menu>
+    </form>
+  </dialog>
+  <dialog id="reportSend" class="card">
+    <form method="dialog">
+      <h3>回報有問題的小節</h3>
+      <p id="reportSummary" class="hint"></p>
+      <label class="field"><span class="fieldLabel" id="reportNoteLabel">哪裡不對？（可不填）</span>
+        <textarea id="reportNote" rows="3" placeholder="例如：左手少了一個音、節奏不對、多了一個休止符"></textarea>
+      </label>
+      <menu>
+        <button value="back" class="btn">返回</button>
+        <span class="grow"></span>
+        <button id="reportSendBtn" value="send" class="btn primary">傳給 Claude</button>
+      </menu>
+    </form>
+  </dialog>
+</body>
+</html>
